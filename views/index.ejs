@@ -4,6 +4,7 @@
   <title>Oscar Vote 1.0</title>
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-sanitize.min.js"></script>
   <script src="https://d3js.org/d3.v4.js"></script>
   <script src="/js/oscarVote.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -49,6 +50,9 @@
 <body>
   <div ng-app="ovoteApp">
     <div ng-controller="VoteController">
+      <table border="0">
+      <tr>
+        <td valign="top">
        <div class="panel panel-primary">
          <div class="panel-heading"><h3 class="panel-title">Oscar Voting / Results Selection</h3></div>
          <div class="panel-body">
@@ -63,10 +67,10 @@
          </select>
          </div>
        </div>
-
        <div>
          <button class="btn btn-primary" ng-click='vote()'>Vote</button>
-         <button class="btn btn-info" ng-click='viewResults()'>View Results</button>
+         <button class="btn btn-info" ng-click='viewResults()'>Results</button>
+         <button class="btn btn-info" disabled id="canDetailsButton" ng-click='viewCandidateDetails()'>Candidate Details</button>
        </div>
        <br> 
        <div class="alert alert-success" id="messageSuccess" style="display: none">{{message}}</div>
@@ -78,6 +82,12 @@
            <bars-chart data="data" ></bars-chart>
          </div>
        </div>
+        </td>
+        <td valign="top"> 
+         <div id="candidateDetails" class="alert alert-success" ng-bind-html="canDetails"></div>
+        </td>
+       </tr>
+      </table>
     </div>
   </div>
 </body>

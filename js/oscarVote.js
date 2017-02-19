@@ -1,4 +1,4 @@
-var ovoteApp = angular.module('ovoteApp', []);
+var ovoteApp = angular.module('ovoteApp', ['ngSanitize']);
 ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) {
   $scope.message = '';
   $scope.years = [];
@@ -8,6 +8,7 @@ ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) 
   $scope.candidates = [];
   $scope.candidate = '';
   $scope.data = [];
+  $scope.canDetails = '';
 
   var yearsUrl = '/candidates/years';
   var categoriesUrl = '/candidates/categories';
@@ -99,6 +100,12 @@ ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) 
       url = '/candidates/year/category/' + $scope.year + '.' + $scope.category;
       $http.get(url).success(function(data, status, headers, config) {
         $scope.candidates = data;
+
+        if ($scope.category.includes("Picture")) {
+          document.getElementById("canDetailsButton").disabled= false;      
+        } else {
+          document.getElementById("canDetailsButton").disabled= true;      
+        }
       }).
       error(function(data,status,headers,config) {
         // TO-DO: Need to fill in.
@@ -107,6 +114,27 @@ ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) 
       //url = '/candidates/year/'+$scope.year;
     }
 
+  };
+
+  $scope.viewCandidateDetails = function() {
+    var url = '';
+    successMessageOn(false);
+    errorMessageOn(false);
+    if ($scope.candidate != '') {
+      url = '/candidates/imdb/' + $scope.candidate.name;
+      $http.get(url).success(function(data, status, headers, config) {
+        $scope.canDetails = $scope.candidate.name + " Details: " + 
+                        "<br>Rating: " + data.rated + " " +
+                        "<br>IMDB Rating: " + data.rating + " " +
+                        "<br>Genres: " + data.genres + " " +
+                        "<br><img src='" + data.poster + "' />";
+      }).
+      error(function(data,status,headers,config) {
+        // TO-DO: Need to fill in.
+      });
+    } else {
+      //url = '/candidates/year/'+$scope.year;
+    }
   };
 
 }]);

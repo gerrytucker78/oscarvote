@@ -1,7 +1,10 @@
+'use strict';
 var express = require("express");
 var router = express.Router();
 var Candidates = require("../models/candidates.js");
 var Votes = require("../models/votes.js");
+const imdb = require('imdb-api');
+let movie;
 
 /**********************
 * Default Index
@@ -148,4 +151,18 @@ router.get("/candidates/add/:year.:category.:name", function(req, res){
   });
 });
 
+/**********************
+* IMDB Interface
+***********************/
+
+// *** Retrieve candidates associated with provided year and category: JSON Format Only
+router.get("/candidates/imdb/:name", function(req,res) {
+
+        imdb.getReq({"name": req.params.name}, function(err, result){
+          res.send(result);
+        });
+
+ 
+});
+//}); 
 module.exports = router;
