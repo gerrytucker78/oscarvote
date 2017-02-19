@@ -2,10 +2,12 @@
 <html>
 <head>
   <title>Oscar Vote 1.0</title>
-
+  <link href="css/bootstrap.min.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
   <script src="https://d3js.org/d3.v4.js"></script>
   <script src="/js/oscarVote.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
 <style>
 .chart {
     background: #eee;
@@ -47,23 +49,36 @@
 <body>
   <div ng-app="ovoteApp">
     <div ng-controller="VoteController">
-       <select ng-model="year" ng-change="loadSelections()" ng-options="y for y in years">
-         <option value="">-- Select Year --</option>
-       </select>
-       <select ng-model="category" ng-change="loadSelections()" ng-options="c for c in categories">
-         <option value="">-- Select Category --</option>
-       </select>
-       <select ng-model="candidate" ng-options="can.name for can in candidates">
-         <option value="">-- Select Candidate --</option>
-       </select>
-       <button ng-click='vote()'>Vote</button>
-       <button ng-click='viewResults()'>View Results</button>
-       <hr>
-       {{message}}
+       <div class="panel panel-primary">
+         <div class="panel-heading"><h3 class="panel-title">Oscar Voting / Results Selection</h3></div>
+         <div class="panel-body">
+         <select ng-model="year" ng-change="loadSelections()" ng-options="y for y in years">
+           <option value="">-- Select Year --</option>
+         </select>
+         <select ng-model="category" ng-change="loadSelections()" ng-options="c for c in categories">
+           <option value="">-- Select Category --</option>
+         </select>
+         <select ng-model="candidate" ng-change="resetMessages()" ng-options="can.name for can in candidates">
+           <option value="">-- Select Candidate --</option>
+         </select>
+         </div>
+       </div>
 
-       <hr>
-       <bars-chart data="data" ></bars-chart>
-     </div>
+       <div>
+         <button class="btn btn-primary" ng-click='vote()'>Vote</button>
+         <button class="btn btn-info" ng-click='viewResults()'>View Results</button>
+       </div>
+       <br> 
+       <div class="alert alert-success" id="messageSuccess" style="display: none">{{message}}</div>
+       <div class="alert alert-danger" id="messageFail" style="display: none">{{message}}</div>
+
+       <div class="panel panel-success" id="resultsChart" style="display: none">
+         <div class="panel-heading"><h3 class="panel-title">Oscars {{year}} - {{category}} Results</h3></div>
+         <div class="panel-body">
+           <bars-chart data="data" ></bars-chart>
+         </div>
+       </div>
+    </div>
   </div>
 </body>
 </html>

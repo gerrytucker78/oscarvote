@@ -126,11 +126,7 @@ router.get("/candidates/reset", function(req,res) {
 router.get("/candidates/year/:year", function(req,res) {
   Candidates.find({"year":req.params.year}, function(err, candidates){
     if(err) throw err;
-    if(candidates.length >= 1){
-      res.send(candidates);
-    } else{
-      res.render("candidates", {data: candidates})
-    }
+    res.send(candidates);
   });
 }); 
 
@@ -138,11 +134,7 @@ router.get("/candidates/year/:year", function(req,res) {
 router.get("/candidates/year/category/:year.:category", function(req,res) {
   Candidates.find({"year":req.params.year,"category":req.params.category}, function(err, candidates){
     if(err) throw err;
-    if(candidates.length >= 1){
-      res.send(candidates);
-    } else{
-      res.render("candidates", {data: candidates})
-    }
+    res.send(candidates);
   });
 }); 
 

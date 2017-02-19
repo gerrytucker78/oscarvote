@@ -7,6 +7,6 @@ app.set("view engine", "ejs");
 app.set("views", "./views");
 
 
-app.use("/", oscarVoteRouter).use("/js", express.static('./js'));
+app.use("/", oscarVoteRouter).use("/js", express.static('./js')).use("/css", express.static('./css'));
 
 app.listen(3000);

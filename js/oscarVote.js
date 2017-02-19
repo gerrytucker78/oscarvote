@@ -27,46 +27,72 @@ ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) 
   });
 
   $scope.viewResults = function() {
-    var url = '/votes/year/category/'+$scope.year+'.'+$scope.category;
+    if ($scope.year != "" && $scope.category !="") {
+      var url = '/votes/year/category/'+$scope.year+'.'+$scope.category;
 
-    $http.get(url).success(function(data, status, headers, config) {
-      $scope.data = data;
+      $http.get(url).success(function(data, status, headers, config) {
+        $scope.data = data;
 
-      // Process Vote Data
-      var procData = [];
-      var totalVotes = 0;
+        // Process Vote Data
+        var procData = [];
+        var totalVotes = 0;
 
-      for (i = 0; i < $scope.data.length; i++) {
-        totalVotes = data[i].votes + totalVotes;
-      }
+        for (i = 0; i < $scope.data.length; i++) {
+          totalVotes = data[i].votes + totalVotes;
+        }
 
-      for (i = 0; i < $scope.data.length; i++) {
-        $scope.data[i].pTotal = ($scope.data[i].votes/totalVotes)*100;
-      }
-    }).
-    error(function(data,status,headers,config) {
-      // TO-DO: Need to fill in.
-    });
+        for (i = 0; i < $scope.data.length; i++) {
+          $scope.data[i].pTotal = ($scope.data[i].votes/totalVotes)*100;
+        }
+
+        document.getElementById('resultsChart').style.display = 'block';
+      }).
+      error(function(data,status,headers,config) {
+        $scope.message = "Error attempting to retrieve results.  Make sure a year and category are selected and try again.";
+        successMessageOn(false);
+        errorMessageOn(true);
+      });
+    } else {
+        $scope.message = "Error attempting to retrieve results.  Make sure a year and category are selected and try again.";
+        successMessageOn(false);
+        errorMessageOn(true);
+    }
   };
 
   $scope.vote = function() {
-    var url = '/votes/add/'+$scope.year+'.'+$scope.category+"."+$scope.candidate.name;
+    if ($scope.year != "" && $scope.category !="" && $scope.candidate != "" && $scope.candidate != null) {
+      var url = '/votes/add/'+$scope.year+'.'+$scope.category+"."+$scope.candidate.name;
 
-    $http.get(url).success(function(data, status, headers, config) {
-      $scope.message = data;
-    }).
-    error(function(data,status,headers,config) {
-      // TO-DO: Need to fill in.
-    });
+      $http.get(url).success(function(data, status, headers, config) {
+        $scope.message = data;
+        successMessageOn(true);
+      }).
+      error(function(data,status,headers,config) {
+        $scope.message = "Error attempting to cast vote.  Make sure a year, category, and candidate are selected and try again.";
+        successMessageOn(false);
+        errorMessageOn(true);
+      });
 
-    //$scope.message = 'Vote cast for ' + $scope.year +' '+ $scope.category + ' ' + $scope.candidate.name;
-    $scope.candidates = [];
-    $scope.loadSelections();
-    $scope.viewResults();
+      //$scope.message = 'Vote cast for ' + $scope.year +' '+ $scope.category + ' ' + $scope.candidate.name;
+      $scope.candidates = [];
+      $scope.loadSelections();
+        $scope.viewResults();
+    } else {
+        $scope.message = "Error attempting to cast vote.  Make sure a year, category, and candidate are selected and try again.";
+        successMessageOn(false);
+        errorMessageOn(true);
+    }
+  };
+
+  $scope.resetMessages = function() {
+    successMessageOn(false);
+    errorMessageOn(false);
   };
 
   $scope.loadSelections = function() {
     var url = '';
+    successMessageOn(false);
+    errorMessageOn(false);
     if ($scope.category != '') {
       url = '/candidates/year/category/' + $scope.year + '.' + $scope.category;
       $http.get(url).success(function(data, status, headers, config) {
@@ -110,3 +136,22 @@ ovoteApp.directive('barsChart', function ($parse) {
       };
       return directiveDefinitionObject;
 });
+
+
+function successMessageOn(flag) {
+  if (flag) {
+    document.getElementById('messageSuccess').style.display = 'block';
+  } else {
+    document.getElementById('messageSuccess').style.display = 'none';
+  }
+}
+
+
+function errorMessageOn(flag) {
+  if (flag) {
+    document.getElementById('messageFail').style.display = 'block';
+  } else {
+    document.getElementById('messageFail').style.display = 'none';
+  }
+}
+
