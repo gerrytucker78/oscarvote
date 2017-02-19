@@ -1,2 +1,3 @@
 .*.swp
 config/prod.json
+config/dev.json
