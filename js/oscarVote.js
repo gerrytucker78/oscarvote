@@ -45,7 +45,7 @@ ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) 
           $scope.data[i].pTotal = ($scope.data[i].votes/totalVotes)*100;
         }
 
-        document.getElementById('resultsChart').style.display = 'block';
+        showResults(true);
       }).
       error(function(data,status,headers,config) {
         $scope.message = "Error attempting to retrieve results.  Make sure a year and category are selected and try again.";
@@ -60,7 +60,7 @@ ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) 
   };
 
   $scope.vote = function() {
-    if ($scope.year != "" && $scope.category !="" && $scope.candidate != "" && $scope.candidate != null) {
+    if ($scope.year != "" && $scope.year != "-- Select Year --" && $scope.category !="" && $scope.category != "-- Select Category --" && $scope.candidate != "" && $scope.candidate != null) {
       var url = '/votes/add/'+$scope.year+'.'+$scope.category+"."+$scope.candidate.name;
 
       $http.get(url).success(function(data, status, headers, config) {
@@ -87,12 +87,14 @@ ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) 
   $scope.resetMessages = function() {
     successMessageOn(false);
     errorMessageOn(false);
+    showResults(false);
   };
 
   $scope.loadSelections = function() {
     var url = '';
     successMessageOn(false);
     errorMessageOn(false);
+    showResults(false);
     if ($scope.category != '') {
       url = '/candidates/year/category/' + $scope.year + '.' + $scope.category;
       $http.get(url).success(function(data, status, headers, config) {
@@ -136,6 +138,14 @@ ovoteApp.directive('barsChart', function ($parse) {
       };
       return directiveDefinitionObject;
 });
+
+function showResults(flag) {
+  if (flag) {
+    document.getElementById('resultsChart').style.display = 'block';
+  } else {
+    document.getElementById('resultsChart').style.display = 'none';
+  }
+}
 
 
 function successMessageOn(flag) {
