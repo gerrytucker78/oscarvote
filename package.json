@@ -11,6 +11,7 @@
   "dependencies": {
     "ejs": "^2.5.5",
     "express": "^4.14.1",
-    "mongoose": "^4.8.1"
+    "mongoose": "^4.8.1",
+    "request-ip": "^1.2.3"
   }
 }

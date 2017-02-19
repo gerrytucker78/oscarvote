@@ -27,6 +27,24 @@ router.get("/votes", function(req, res){
   });
 });
 
+// *** Add a vote: JSON Format Only
+router.get("/votes/add/:year.:category.:name", function(req, res){
+  Votes.find({"year": req.params.year, "category": req.params.category, "voter": req.ip}, function(err, vote){
+    if(err) throw err;
+    if(vote.length >= 1){
+// ERROR: Cannot cast more than one vote!
+      res.render("voteResult", {voteResult: "ERROR: " + req.ip + " already casted a vote for " + req.params.year + " " + req.params.category + " - " + vote[0].name});
+    } else{
+      var newVote= new Votes({ category: req.params.category, name: req.params.name, year: req.params.year, voter: req.ip });
+      newVote.save(function(err){
+        if(err) throw err;
+        res.redirect("/votes");
+      });
+    }
+  });
+});
+
+
 
 /**********************
 * Candidate Backend Services
