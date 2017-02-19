@@ -4,8 +4,8 @@
   <title>Oscar Vote 1.0</title>
 
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-  <script src="/js/oscarVote.js"></script>
   <script src="https://d3js.org/d3.v4.js"></script>
+  <script src="/js/oscarVote.js"></script>
 <style>
 .chart {
     background: #eee;
@@ -28,7 +28,18 @@
   color: white;
   box-shadow: 2px 2px 2px #666;
 }
-
+        .axis path, .axis line {
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+        .axis path{
+            fill: none;
+            stroke: none;
+        }
+        .bar {
+            fill: steelblue;
+        }
 </style>
 
 </head>
@@ -46,8 +57,12 @@
          <option value="">-- Select Candidate --</option>
        </select>
        <button ng-click='vote()'>Vote</button>
+       <button ng-click='viewResults()'>View Results</button>
        <hr>
        {{message}}
+
+       <hr>
+       <bars-chart data="data" ></bars-chart>
      </div>
   </div>
 </body>
