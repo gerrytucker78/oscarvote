@@ -33,17 +33,32 @@ router.get("/votes/add/:year.:category.:name", function(req, res){
     if(err) throw err;
     if(vote.length >= 1){
 // ERROR: Cannot cast more than one vote!
-      res.render("voteResult", {voteResult: "ERROR: " + req.ip + " already casted a vote for " + req.params.year + " " + req.params.category + " - " + vote[0].name});
+//      res.render("voteResult", {voteResult: "ERROR: " + req.ip + " already casted a vote for " + req.params.year + " " + req.params.category + " - " + vote[0].name});
+      res.send("ERROR: " + req.ip + " already casted a vote for " + req.params.year + " " + req.params.category + " - " + vote[0].name);
     } else{
       var newVote= new Votes({ category: req.params.category, name: req.params.name, year: req.params.year, voter: req.ip });
       newVote.save(function(err){
         if(err) throw err;
-        res.redirect("/votes");
+//        res.render("voteResult", {voteResult: "Success: Vote cast for " + req.params.year + " " + req.params.category + " - " + req.params.name});
+        res.send("Success: Vote cast for " + req.params.year + " " + req.params.category + " - " + req.params.name);
       });
     }
   });
 });
 
+// *** Delete All votes: JSON Format Only
+router.get("/votes/reset", function(req,res) {
+  Votes.find({}, function(err, votes){
+    if(err) throw err;
+
+    for (i = 0; i < votes.length; i++) {
+      var voteDel = votes[i];
+      voteDel.remove();
+    }
+
+    res.redirect("/votes");
+  });
+}); 
 
 
 /**********************

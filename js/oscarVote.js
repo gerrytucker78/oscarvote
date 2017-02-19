@@ -26,25 +26,37 @@ ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) 
   });
 
   $scope.vote = function() {
+    var url = '/votes/add/'+$scope.year+'.'+$scope.category+"."+$scope.candidate.name;
+
+    $http.get(url).success(function(data, status, headers, config) {
+      $scope.candidates = data;
+      $scope.message = data;
+    }).
+    error(function(data,status,headers,config) {
+      // TO-DO: Need to fill in.
+      $scope.message = "Error!";
+    });
+
     $scope.message = 'Vote cast for ' + $scope.year +' '+ $scope.category + ' ' + $scope.candidate.name;
+    $scope.category = '';
+    $scope.candiates = [];
+    $scope.loadSelections();
   };
 
   $scope.loadSelections = function() {
     var url = '';
     if ($scope.category != '') {
       url = '/candidates/year/category/' + $scope.year + '.' + $scope.category;
+      $http.get(url).success(function(data, status, headers, config) {
+        $scope.candidates = data;
+      }).
+      error(function(data,status,headers,config) {
+        // TO-DO: Need to fill in.
+      });
     } else {
-      url = '/candidates/year/'+$scope.year;
+      //url = '/candidates/year/'+$scope.year;
     }
 
-    $http.get(url).success(function(data, status, headers, config) {
-      $scope.candidates = data;
-      $scope.message = "All Good: " + url + " = "  + data.length + "!";
-    }).
-    error(function(data,status,headers,config) {
-      // TO-DO: Need to fill in.
-      $scope.message = "Error!";
-    });
   };
 
 }]);
