@@ -59,7 +59,7 @@ router.get("/votes/add/:year.:category.:name", function(req, res){
 router.get("/votes/reset", function(req,res) {
   Votes.find({}, function(err, votes){
     if(err) throw err;
-
+    var i;
     for (i = 0; i < votes.length; i++) {
       var voteDel = votes[i];
       voteDel.remove();
@@ -114,7 +114,7 @@ router.get("/candidates/categories", function(req,res) {
 router.get("/candidates/reset", function(req,res) {
   Candidates.find({}, function(err, candidates){
     if(err) throw err;
-
+    var i;
     for (i = 0; i < candidates.length; i++) {
       var canDel = candidates[i];
       canDel.remove();

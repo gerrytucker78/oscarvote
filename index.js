@@ -3,6 +3,8 @@
 var express = require("express");
 var app = express();
 var oscarVoteRouter = require("./router/oscarVoteRouter.js");
+var favicon = require('serve-favicon');
+app.use(favicon(__dirname + '/favico.ico'));
 
 
 app.set("view engine", "ejs");

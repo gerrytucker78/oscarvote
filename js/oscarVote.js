@@ -28,7 +28,7 @@ ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) 
   });
 
   $scope.viewResults = function() {
-    if ($scope.year != "" && $scope.category !="") {
+    if ($scope.year != "" && $scope.category !="" && $scope.category != "-- Select Category --") {
       var url = '/votes/year/category/'+$scope.year+'.'+$scope.category;
 
       $http.get(url).success(function(data, status, headers, config) {
@@ -74,10 +74,7 @@ ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) 
         errorMessageOn(true);
       });
 
-      //$scope.message = 'Vote cast for ' + $scope.year +' '+ $scope.category + ' ' + $scope.candidate.name;
-      $scope.candidates = [];
-      $scope.loadSelections();
-        $scope.viewResults();
+      $scope.viewResults();
     } else {
         $scope.message = "Error attempting to cast vote.  Make sure a year, category, and candidate are selected and try again.";
         successMessageOn(false);
@@ -88,29 +85,26 @@ ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) 
   $scope.resetMessages = function() {
     successMessageOn(false);
     errorMessageOn(false);
-    showResults(false);
+    //showResults(false);
+    $scope.viewCandidateDetails();
   };
 
   $scope.loadSelections = function() {
     var url = '';
     successMessageOn(false);
     errorMessageOn(false);
-    showResults(false);
-    if ($scope.category != '') {
+    if ($scope.category != '' && $scope.category != "-- Select Category --") {
+      $scope.viewResults();
+      showResults(true);
       url = '/candidates/year/category/' + $scope.year + '.' + $scope.category;
       $http.get(url).success(function(data, status, headers, config) {
         $scope.candidates = data;
-
-        if ($scope.category.includes("Picture")) {
-          document.getElementById("canDetailsButton").disabled= false;      
-        } else {
-          document.getElementById("canDetailsButton").disabled= true;      
-        }
       }).
       error(function(data,status,headers,config) {
         // TO-DO: Need to fill in.
       });
     } else {
+      showResults(false);
       //url = '/candidates/year/'+$scope.year;
     }
 
@@ -120,20 +114,31 @@ ovoteApp.controller('VoteController', ['$scope','$http', function($scope,$http) 
     var url = '';
     successMessageOn(false);
     errorMessageOn(false);
-    if ($scope.candidate != '') {
-      url = '/candidates/imdb/' + $scope.candidate.name;
+    if ($scope.candidate != '' && $scope.candidate != "-- Select Candidate --" && $scope.candidate != null) {
+      var picture;
+
+      // If not a "Picture" award, extract out the picture from the ()
+      if ($scope.category.includes("Picture")) {
+        picture = $scope.candidate.name;
+      } else {
+        picture = ($scope.candidate.name).replace(/^.+\(/,"").replace(/\)/,"");
+      }
+
+      candidateDetailsOn(true);
+      url = '/candidates/imdb/' + picture;
       $http.get(url).success(function(data, status, headers, config) {
-        $scope.canDetails = $scope.candidate.name + " Details: " + 
+        $scope.canDetails = 
+                        "<img src='" + data.poster + "' />" +
                         "<br>Rating: " + data.rated + " " +
                         "<br>IMDB Rating: " + data.rating + " " +
                         "<br>Genres: " + data.genres + " " +
-                        "<br><img src='" + data.poster + "' />";
+                        "<br>Plot: " + data.plot+ " ";
       }).
       error(function(data,status,headers,config) {
         // TO-DO: Need to fill in.
       });
     } else {
-      //url = '/candidates/year/'+$scope.year;
+      candidateDetailsOn(false);
     }
   };
 
@@ -151,7 +156,7 @@ ovoteApp.directive('barsChart', function ($parse) {
              .selectAll('div')
              .data(scope.data).enter().append("div")
              .style("width", function(d) { return d.pTotal + "%"; })
-             .text(function(d) { return d.name; });
+             .text(function(d) { return d._id + " (" + d.votes + ")"; });
 
             scope.$watch('data',function (newData, oldData) {
               chart.selectAll('*').remove();
@@ -172,6 +177,14 @@ function showResults(flag) {
     document.getElementById('resultsChart').style.display = 'block';
   } else {
     document.getElementById('resultsChart').style.display = 'none';
+  }
+}
+
+function candidateDetailsOn(flag) {
+  if (flag) {
+    document.getElementById('candidateDetails').style.display = 'block';
+  } else {
+    document.getElementById('candidateDetails').style.display = 'none';
   }
 }
 

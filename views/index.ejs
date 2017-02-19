@@ -50,9 +50,9 @@
 <body>
   <div ng-app="ovoteApp">
     <div ng-controller="VoteController">
-      <table border="0">
+      <table border="0" cellspacing="0">
       <tr>
-        <td valign="top">
+        <td valign="top" width="700px">
        <div class="panel panel-primary">
          <div class="panel-heading"><h3 class="panel-title">Oscar Voting / Results Selection</h3></div>
          <div class="panel-body">
@@ -65,16 +65,11 @@
          <select ng-model="candidate" ng-change="resetMessages()" ng-options="can.name for can in candidates">
            <option value="">-- Select Candidate --</option>
          </select>
+         <br /><br /> 
+         <button class="btn btn-primary" ng-click='vote()'>Vote</button>
          </div>
        </div>
-       <div>
-         <button class="btn btn-primary" ng-click='vote()'>Vote</button>
-         <button class="btn btn-info" ng-click='viewResults()'>Results</button>
-         <button class="btn btn-info" disabled id="canDetailsButton" ng-click='viewCandidateDetails()'>Candidate Details</button>
-       </div>
-       <br> 
-       <div class="alert alert-success" id="messageSuccess" style="display: none">{{message}}</div>
-       <div class="alert alert-danger" id="messageFail" style="display: none">{{message}}</div>
+       <br />
 
        <div class="panel panel-success" id="resultsChart" style="display: none">
          <div class="panel-heading"><h3 class="panel-title">Oscars {{year}} - {{category}} Results</h3></div>
@@ -82,9 +77,11 @@
            <bars-chart data="data" ></bars-chart>
          </div>
        </div>
+       <div class="alert alert-success" id="messageSuccess" style="display: none">{{message}}</div>
+       <div class="alert alert-danger" id="messageFail" style="display: none">{{message}}</div>
         </td>
-        <td valign="top"> 
-         <div id="candidateDetails" class="alert alert-success" ng-bind-html="canDetails"></div>
+        <td valign="top" width="250px"> 
+         <div id="candidateDetails" class="alert alert-success" ng-bind-html="canDetails" style="display: none"></div>
         </td>
        </tr>
       </table>
