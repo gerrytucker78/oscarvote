@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MongoDB Web App</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="/js/oscarVote.js"></script>
+  <script src="https://d3js.org/d3.v4.js"></script>
+<style>
+.chart {
+    background: #eee;
+    padding: 3px;
+}
+
+.chart div {
+  width: 0;
+  transition: all 1s ease-out;
+  -moz-transition: all 1s ease-out;
+  -webkit-transition: all 1s ease-out;
+}
+
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 5px;
+  color: white;
+  box-shadow: 2px 2px 2px #666;
+}
+
+</style>
+
+</head>
+
+<body>
+  <div ng-app="ovoteApp">
+    <div ng-controller="VoteController">
+       <select ng-model="year" ng-change="loadSelections()" ng-options="y for y in years">
+         <option value="">-- Select Year --</option>
+       </select>
+       <select ng-model="category" ng-change="loadSelections()" ng-options="c for c in categories">
+         <option value="">-- Select Category --</option>
+       </select>
+       <select ng-model="selection" ng-options="data.name for data in selections">
+         <option value="">-- Select Candidate --</option>
+       </select>
+       <button ng-click='vote()'>Vote</button>
+       <hr>
+       {{message}}
+       <bars-chart chart-data="categories" ></bars-chart>
+     </div>
+  </div>
+</body>
+</html>
