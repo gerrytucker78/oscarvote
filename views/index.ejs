@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MongoDB Web App</title>
+  <title>Oscar Vote 1.0</title>
 
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
   <script src="/js/oscarVote.js"></script>
@@ -42,13 +42,12 @@
        <select ng-model="category" ng-change="loadSelections()" ng-options="c for c in categories">
          <option value="">-- Select Category --</option>
        </select>
-       <select ng-model="selection" ng-options="data.name for data in selections">
+       <select ng-model="candidate" ng-options="can.name for can in candidates">
          <option value="">-- Select Candidate --</option>
        </select>
        <button ng-click='vote()'>Vote</button>
        <hr>
        {{message}}
-       <bars-chart chart-data="categories" ></bars-chart>
      </div>
   </div>
 </body>
